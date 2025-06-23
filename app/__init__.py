@@ -1,5 +1,5 @@
 from flask import Flask
-import app.recipes as recipes
+from . import recipes, auth
 
 def create_app():
     app = Flask(__name__, instance_relative_config=False)
@@ -7,5 +7,7 @@ def create_app():
 
     app.register_blueprint(recipes.bp)
     app.route('/')(recipes.default)
+
+    app.register_blueprint(auth.bp)
 
     return app
