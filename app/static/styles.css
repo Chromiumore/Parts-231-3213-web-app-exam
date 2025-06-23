@@ -11,3 +11,6 @@ main {
     bottom: 2.5%;
     opacity: 0.75;
 }
+textarea {
+    height: 150px;
+}

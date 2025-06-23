@@ -1,0 +1,53 @@
+{% macro create_form(action) %}
+<form action="">
+    <div class="row">
+        <div class="col-lg-4">
+            <label for="name">Название</label>
+            <input type="text" name="name" id="name" class="form-control">
+        </div>
+        <div class="col-lg-2">
+            <label for="cookingTime">Время приготовления</label>
+            <input type="number" name="cooking_time" id="cookingTime" class="form-control" placeholder="кол-во минут" min="1">
+        </div>
+        <div class="col-lg-2">
+            <label for="portions">Количество порций</label>
+            <input type="number" name="portions" id="portions" class="form-control" min="1">
+        </div>
+        <div class="col-lg-4">
+            <label for="formFileMultiple" class="form-label">Изображения</label>
+            <input class="form-control" type="file" id="formFileMultiple" name="images" multiple>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <label for="description">Описание</label>
+            <textarea name="description" id="description" class="form-control"></textarea>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <label for="ingridients">Ингридиенты</label>
+            <textarea name="ingridients" id="ingridients" class="form-control"></textarea>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <label for="steps">Шаги приготовления</label>
+            <textarea name="steps" id="steps" class="form-control"></textarea>
+        </div>
+    </div>
+    <div class="container" id="saveRecipeFormButton">
+        <button href="" class="btn btn-primary h-100 w-100">Отправить</button>
+    </div>
+</form>
+
+{% block scripts %}
+<script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
+<script>
+    const easyMDE1 = new EasyMDE({element: document.getElementById('description')});
+    const easyMDE2 = new EasyMDE({element: document.getElementById('ingridients')});
+    const easyMDE3 = new EasyMDE({element: document.getElementById('steps')});
+</script>
+{% endblock %}
+
+{% endmacro %}

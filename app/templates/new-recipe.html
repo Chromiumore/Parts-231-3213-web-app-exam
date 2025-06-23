@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+
+{% from 'recipe-form.html' import create_form with context %}
+
+{% block content %}
+{{ create_form('new') }}
+{% endblock %}
