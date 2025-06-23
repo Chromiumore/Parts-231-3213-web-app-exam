@@ -7,3 +7,7 @@ body {
 main {
     flex: 1;
 }
+#addRecipeBottomButton {
+    bottom: 2.5%;
+    opacity: 0.75;
+}
