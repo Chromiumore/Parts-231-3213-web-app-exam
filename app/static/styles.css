@@ -14,3 +14,16 @@ main {
 textarea {
     height: 150px;
 }
+.recipe-gallery img {
+    cursor: pointer;
+    transition: transform 0.2s;
+    margin-bottom: 10px;
+}
+.game-gallery img:hover {
+    transform: scale(1.02);
+}
+.view-image {
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 15px;
+}

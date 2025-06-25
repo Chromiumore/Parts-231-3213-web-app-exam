@@ -3,69 +3,62 @@
 {% block content %}
 <h1>Рецепты</h1>
 <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mb-3">
+    {% if not recipes %}
+    <p>Не удалось найти ни одного рецепта 😔</p>
+    {% else %}
+    {% for recipe in recipes %}
     <div class="column">
         <div class="card recipe-card">
-            <img src="https://placehold.co/200x150" class="card-img-top" alt="">
             <div class="card-body">
-                <h5 class="card-title">Оладушки</h5>
+                <h5 class="card-title">{{ recipe.name }}</h5>
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item">Время приготовления: 15 минут</li>
-                    <li class="list-group-item">Порций: 3</li>
-                    <li class="list-group-item">Средняя оценка: Отлично</li>
-                    <li class="list-group-item">Количество отзывов: 12</li>
+                    <li class="list-group-item">Время приготовления: {{ recipe.time }} минут</li>
+                    <li class="list-group-item">Порций: {{ recipe.portions }}</li>
+                    <li class="list-group-item">Средняя оценка: {{ {1: 'Плохо', 2: 'Неудовлетворительно', 3: 'Удовлетворительно', 4: 'Хорошо', 5: 'Отлично'}[recipe.get_avg_rating() |round] | default('ужасно') }}</li>
+                    <li class="list-group-item">Количество отзывов: {{ recipe.get_feedbacks_number() }}</li>
                 </ul>
                 <div class="card-footer">
-                    <a href="" class="btn btn-primary">Просмотр</a>
-                    <a href="" class="btn btn-primary"><i class="fa-solid fa-pen-to-square"></i></a>
-                    <a href="" class="btn btn-primary"><i class="fa-solid fa-trash"></i></a>
+                    <a href="{{ url_for('recipes.view', recipe_id=recipe.id) }}" class="btn btn-primary">Просмотр</a>
+                    {% if current_user.is_authenticated and (current_user.get_role_name() == 'admin' or current_user.id == recipe.user_id) %}
+                    <a href="{{ url_for('recipes.edit', recipe_id=recipe.id) }}" class="btn btn-primary"><i class="fa-solid fa-pen-to-square"></i></a>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#deleteModal" data-recipe-id="{{ recipe.id }}"><i class="fa-solid fa-trash"></i></button>
+                    {% endif %}
                 </div>
             </div>
         </div>
     </div>
-    <div class="column">
-        <div class="card recipe-card">
-            <img src="https://placehold.co/200x150" class="card-img-top" alt="">
-            <div class="card-body">
-                <h5 class="card-title">Оладушки</h5>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item">Время приготовления: 15 минут</li>
-                    <li class="list-group-item">Порций: 3</li>
-                    <li class="list-group-item">Средняя оценка: Отлично</li>
-                    <li class="list-group-item">Количество отзывов: 12</li>
-                </ul>
-                <div class="card-footer">
-                    <a href="" class="btn btn-primary">Просмотр</a>
-                    <a href="" class="btn btn-primary"><i class="fa-solid fa-pen-to-square"></i></a>
-                    <a href="" class="btn btn-primary"><i class="fa-solid fa-trash"></i></a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="column">
-        <div class="card recipe-card">
-            <img src="https://placehold.co/200x150" class="card-img-top" alt="">
-            <div class="card-body">
-                <h5 class="card-title">Оладушки</h5>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item">Время приготовления: 15 минут</li>
-                    <li class="list-group-item">Порций: 3</li>
-                    <li class="list-group-item">Средняя оценка: Отлично</li>
-                    <li class="list-group-item">Количество отзывов: 12</li>
-                </ul>
-                <div class="card-footer">
-                    <a href="" class="btn btn-primary">Просмотр</a>
-                    <a href="" class="btn btn-primary"><i class="fa-solid fa-pen-to-square"></i></a>
-                    <a href="" class="btn btn-primary"><i class="fa-solid fa-trash"></i></a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="container sticky-bottom" id="addRecipeBottomButton">
-    <a href="" class="btn btn-primary h-100 w-100">Добавить рецепт</a>
+    {% endfor %}
+    {% endif %}
 </div>
 
-{% block scripts %}
+{% if current_user.is_authenticated %}
+<div class="container sticky-bottom" id="addRecipeBottomButton">
+    <a href="{{ url_for('recipes.new') }}" class="btn btn-primary h-100 w-100">Добавить рецепт</a>
+</div>
+{% endif %}
+
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="deleteModalLabel">Удаление рецепта</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Вы уверены, что хотите удалить рецепт?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отменить</button>
+                <form method="post" id="deleteModalForm">
+                    <button type="submit" class="btn btn-danger">Удалить</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% endblock %}
 
+{% block scripts %}
+<script src="{{ url_for('static', filename='delete_recipe_modal.js') }}"></script>
 {% endblock %}

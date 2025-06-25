@@ -1,0 +1,27 @@
+{% macro create_form(action, feedback=None) %}
+<form method="post">
+    <div>
+        <label for="feedbackText"></label>
+        <textarea name="feedback_text" id="feedbackText" class="form-control">{{ request.form.get('feedback_text') or feedback.feedback_text or '' }}</textarea>
+    </div>
+    <div class="d-flex justify-content-between mt-4">
+        <select name="rating" id="rating" required>
+            <option value="5" {% if feedback.rating == 5 %} selected {% endif %}>Отлично</option>
+            <option value="4" {% if feedback.rating == 4 %} selected {% endif %}>Хорошо</option>
+            <option value="3" {% if feedback.rating == 3 %} selected {% endif %}>Удовлетворительно</option>
+            <option value="2" {% if feedback.rating == 2 %} selected {% endif %}>Неудовлетворительно</option>
+            <option value="1" {% if feedback.rating == 1 %} selected {% endif %}>Плохо</option>
+            <option value="0" {% if feedback.rating == 0 %} selected {% endif %}>Ужасно</option>
+        </select>
+        <button type="submit" class="btn btn-primary">Отправить</button>
+    </div>
+</form>
+
+{% block scripts %}
+<script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
+<script>
+    const easyMDE = new EasyMDE({element: document.getElementById('feedbackText')});
+</script>
+{% endblock %}
+
+{% endmacro %}

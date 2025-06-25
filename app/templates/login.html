@@ -4,11 +4,11 @@
     <form method="POST">
         <div>
             <label for="login">Логин</label>
-            <input type="text" id="login" name="login" class="form-control" value="{{ request.form.get('login', '')}}" required>
+            <input type="text" id="login" name="login" class="form-control" required>
         </div>
         <div>
             <label for="password">Пароль</label>
-            <input type="text" id="password" name="password" class="form-control" value="{{ request.form.get('password', '')}}" required>
+            <input type="text" id="password" name="password" class="form-control" required>
         </div>
         <div>
             <input type="checkbox" name="remember_me" id="remember_me">

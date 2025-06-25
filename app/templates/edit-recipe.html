@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+
+{% from 'recipe-form.html' import create_form with context %}
+
+{% block content %}
+<h1>Редактировать рецепт</h1>
+{{ create_form('edit', recipe=recipe) }}
+{% endblock %}

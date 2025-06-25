@@ -2,15 +2,15 @@
 
 {% block content %}
 <div class="container">
-    <h1>Оладушки</h1>
-    <p class="text-muted">Автор: Баба Нина</p>
+    <h1>{{ recipe.name }}</h1>
+    <p class="text-muted">Автор: {{ author.name }}</p>
 
     <div class="row mb-4">
             <div class="col-md-6">
                 <div class="card stat-card">
                     <div class="card-body text-center">
                         <div class="stat-value text-primary">Порции</div>
-                        <div class="text-muted">Всего игр</div>
+                        <div class="text-muted">{{ recipe.portions }}</div>
                     </div>
                 </div>
             </div>
@@ -18,7 +18,7 @@
                 <div class="card stat-card">
                     <div class="card-body text-center">
                         <div class="stat-value text-success">Время приготовления</div>
-                        <div class="text-muted">15 мин</div>
+                        <div class="text-muted">{{ recipe.time }} мин</div>
                     </div>
                 </div>
             </div>
@@ -28,15 +28,15 @@
         <div class="card">
             <div class="card-body">
                 <h2 class="card-title mb-4">Описание</h2>
-                Далеко-далеко за словесными горами, в стране гласных и согласных живут рыбные тексты. Ipsum образ последний, путь продолжил раз запятой рекламных текста рукопись взгляд, обеспечивает свою злых даже возвращайся, точках ручеек осталось. Себя.
+                {{ recipe.description }}
             </div>
         </div>
     </div>
     <div class="mb-5">
         <div class="card">
             <div class="card-body">
-                <h2 class="card-title mb-4">Ингридиенты</h2>
-                Далеко-далеко, за словесными горами в стране гласных и согласных живут рыбные тексты. Она, имени, это оксмокс правилами диких большого маленький рыбного всемогущая, на берегу даль дорогу безорфографичный пор злых ее великий выйти себя?
+                <h2 class="card-title mb-4">Ингредиенты</h2>
+                {{ recipe.ingredients }}
             </div>
         </div>
     </div>
@@ -44,28 +44,80 @@
         <div class="card">
             <div class="card-body">
                 <h2 class="card-title mb-4">Шаги приготовления</h2>
-                Далеко-далеко за словесными горами в стране гласных и согласных живут рыбные тексты. Языкового они там, это послушавшись диких предупреждал строчка даже lorem одна безопасную живет города текст моей дороге вскоре несколько раз!
+                {{ recipe.steps }}
             </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="view-image">
+            <img src="{{ url_for('recipes.send_uploaded_file', filename=files[0].name) }}" class="img-fluid rounded"
+            alt="View image" id="viewImage" style="width: 800px; height: 450px;">
+        </div>
+        <div class="row recipe-gallery">
+            {% for i in range(files|length) %}
+            <div class="col-4">
+                <img src="{{ url_for('recipes.send_uploaded_file', filename=files[i].name) }}" class="img-fluid rounded" alt="Изображение {{ i }}"
+                onclick="document.getElementById('viewImage').src=this.src" style="width: 300px; height: 170px;">
+            </div>
+            {% endfor %}
         </div>
     </div>
     <h2>Отзывы</h2>
     <div class="mb-5 mx-5">
+        {% if current_user.is_authenticated and not current_user.has_feedback(recipe.id) %}
         <div class="container p-3" id="leaveFeedback">
-            <a href="" class="btn btn-primary h-100 w-100">Оставить отзыв</a>
+            <a href="{{ url_for('recipes.new_feedback', recipe_id=recipe.id) }}" class="btn btn-primary h-100 w-100">Оставить отзыв</a>
         </div>
-        <div class="card">
-            <div class="d-flex justify-content-between px-4 py-3">
-                <p class="text-primary">Автор</p>
-                <p>Отлично</p>
+        {% endif %}
+        {% if not feedbacks_info %}
+        <p>У этого рецепта нет ни одного отзыва. Но вы можете оставить первый 📝</p>
+        {% else %}
+        <div class="d-flex flex-column gap-3">
+            {% for feedback_info in feedbacks_info %}
+            <div class="card">
+                <div class="d-flex justify-content-between px-4 py-3">
+                    <p class="text-primary">{{ feedback_info[1].name }}</p>
+                    <p>{{ {1: 'Плохо', 2: 'Неудовлетворительно', 3: 'Удовлетворительно', 4: 'Хорошо', 5: 'Отлично'}[feedback_info[0].rating] | default('Ужасно') }}</p>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <p>{{ feedback_info[0].feedback_text }}</p>
+                        {% if current_user.is_authenticated and (current_user.get_role_name() == 'admin' or current_user.id == author.id) %}
+                        <div>
+                            <a href="{{ url_for('recipes.edit_feedback', recipe_id=recipe.id, feedback_id=feedback_info[0].id) }}" class="btn btn-primary"><i class="fa-solid fa-pen-to-square"></i></a>
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#deleteModal" data-feedback-id="{{ feedback_info[0].id }}" data-recipe-id="{{ recipe.id }}"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
             </div>
-            <div class="card-body">
-                Далеко-далеко за словесными горами в стране гласных и согласных живут рыбные тексты. Языкового они там, это послушавшись диких предупреждал строчка даже lorem одна безопасную живет города текст моей дороге вскоре несколько раз!
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="deleteModalLabel">Удаление отзыва</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Вы уверены, что хотите удалить отзыв?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отменить</button>
+                <form method="post" id="deleteModalForm">
+                    <button type="submit" class="btn btn-danger">Удалить</button>
+                </form>
             </div>
         </div>
     </div>
 </div>
-
-{% block scripts %}
 {% endblock %}
 
+{% block scripts %}
+<script src="{{ url_for('static', filename='delete_feedback_modal.js') }}"></script>
 {% endblock %}

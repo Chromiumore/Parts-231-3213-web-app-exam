@@ -16,11 +16,14 @@
     <a href="{{ url_for('recipes.index') }}" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none"><span class="fs-4 fw-bold"><i class="fa-solid fa-bowl-food"></i> Nommi</span></a>
     <ui class="nav nav-pills col-12 col-md-auto mb-2 justify-content-center mb-md-0">
       <li class="nav-item"><a href="{{ url_for('recipes.index') }}" class="nav-link">Главная</a></li>
-      <li class="nav-item"><a href="{{ url_for('recipes.new') }}" class="nav-link">Добавить рецепт</a></li>
       <li class="nav-item"><a href="" class="nav-link">Служба поддержки</a></li>
     </ui>
     <div class="col-md-3 text-end">
+      {% if not current_user.is_authenticated %}
       <a href="{{ url_for('auth.login') }}" class="btn btn-outline-primary me-2">Войти</a>
+      {% else %}
+      <a href="{{ url_for('auth.logout') }}" class="btn btn-outline-primary me-2">Выйти</a>
+      {% endif %}
     </div>
   </header>
     <main class="container my-5">
