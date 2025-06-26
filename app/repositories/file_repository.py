@@ -12,15 +12,13 @@ class FileRepository:
         query = self.db.select(File).where(File.name == filename)
         return self.db.session.execute(query).scalar()
 
-    def create(self, file):
+    def create_files(self, files):
         try:
-            self.db.session.add(file)
+            self.db.session.add_all(files)
             self.db.session.commit()
-            self.db.session.refresh(file)
         except Exception as e:
             self.db.session.rollback()
             raise e
-        return file
     
     def delete_files(self, recipe_id):
         try:

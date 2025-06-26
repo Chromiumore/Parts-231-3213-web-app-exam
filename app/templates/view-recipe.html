@@ -28,7 +28,7 @@
         <div class="card">
             <div class="card-body">
                 <h2 class="card-title mb-4">Описание</h2>
-                {{ recipe.description }}
+                {{ markdown(recipe.description) | safe }}
             </div>
         </div>
     </div>
@@ -36,7 +36,7 @@
         <div class="card">
             <div class="card-body">
                 <h2 class="card-title mb-4">Ингредиенты</h2>
-                {{ recipe.ingredients }}
+                {{ markdown(recipe.ingredients) | safe }}
             </div>
         </div>
     </div>
@@ -44,7 +44,7 @@
         <div class="card">
             <div class="card-body">
                 <h2 class="card-title mb-4">Шаги приготовления</h2>
-                {{ recipe.steps }}
+                {{ markdown(recipe.steps) | safe }}
             </div>
         </div>
     </div>
@@ -64,7 +64,7 @@
     </div>
     <h2>Отзывы</h2>
     <div class="mb-5 mx-5">
-        {% if current_user.is_authenticated and not current_user.has_feedback(recipe.id) %}
+        {% if current_user.is_authenticated and not current_user.get_feedback(recipe.id) %}
         <div class="container p-3" id="leaveFeedback">
             <a href="{{ url_for('recipes.new_feedback', recipe_id=recipe.id) }}" class="btn btn-primary h-100 w-100">Оставить отзыв</a>
         </div>
@@ -81,8 +81,10 @@
                 </div>
                 <div class="card-body">
                     <div class="d-flex justify-content-between">
-                        <p>{{ feedback_info[0].feedback_text }}</p>
-                        {% if current_user.is_authenticated and (current_user.get_role_name() == 'admin' or current_user.id == author.id) %}
+                        <div>
+                            {{ markdown(feedback_info[0].feedback_text) | safe }}
+                        </div>
+                        {% if current_user.is_authenticated and ((current_user.get_role_name() == 'admin' or current_user.id == feedback_info[1].id)) %}
                         <div>
                             <a href="{{ url_for('recipes.edit_feedback', recipe_id=recipe.id, feedback_id=feedback_info[0].id) }}" class="btn btn-primary"><i class="fa-solid fa-pen-to-square"></i></a>
                             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#deleteModal" data-feedback-id="{{ feedback_info[0].id }}" data-recipe-id="{{ recipe.id }}"><i class="fa-solid fa-trash"></i></button>

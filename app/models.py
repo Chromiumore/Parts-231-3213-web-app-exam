@@ -1,6 +1,6 @@
 from datetime import date
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
-from sqlalchemy import MetaData, String, ForeignKey, Text, Integer, func
+from sqlalchemy import MetaData, String, ForeignKey, Text, Integer, func, and_
 from sqlalchemy.ext.hybrid import hybrid_method
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
@@ -32,8 +32,8 @@ class User(Base, UserMixin):
         return db.session.query(Role.name).join(User).where(User.id == self.id).scalar()
     
     @hybrid_method
-    def has_feedback(self, recipe_id):
-        return db.session.query(Recipe).join(User, Recipe.user_id == self.id).where(Recipe.id == recipe_id).scalar()
+    def get_feedback(self, recipe_id):
+        return db.session.query(Feedback).join(User, Feedback.user_id == User.id).join(Recipe, Recipe.id == Feedback.recipe_id).where(and_(User.id == self.id, Recipe.id == recipe_id)).scalar()
         
 
 class Role(Base):

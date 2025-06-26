@@ -1,12 +1,12 @@
+from sqlalchemy import select
 from app.models import Recipe
 
 class RecipeRepository:
     def __init__(self, db):
         self.db = db
 
-    def all(self):
-        query = self.db.select(Recipe).order_by(Recipe.id)
-        return self.db.session.execute(query).scalars()
+    def all(self, page=1):
+        return self.db.session.query(Recipe).order_by(Recipe.id).paginate(page=page, per_page=10, error_out=False)
     
     def get(self, id):
         query = self.db.select(Recipe).where(Recipe.id == id)
