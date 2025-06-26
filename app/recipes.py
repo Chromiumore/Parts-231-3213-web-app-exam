@@ -54,9 +54,9 @@ def view(recipe_id):
     if not recipe:
         abort(404)
     author = user_repository.get_recipe_author(recipe_id)
-    feedbacks = feedback_repository.get_by_recipe(recipe_id)
+    feedbacks = feedback_repository.get_by_recipe(recipe_id, current_user.id if current_user.is_authenticated else None)
     feedbacks_info = [(fb, user_repository.get_feedback_author(fb.id)) for fb in feedbacks]
-    files = list(file_repository.get_recipe_fiels(recipe.id))
+    files = list(file_repository.get_recipe_files(recipe.id))
     return render_template('view-recipe.html', recipe=recipe, author=author, feedbacks_info=feedbacks_info, files=files, markdown=markdown)
 
 @bp.route('/new', methods=['POST', 'GET'])
@@ -137,7 +137,7 @@ def delete(recipe_id):
     if not recipe:
         abort(404)
 
-    recipe_files = file_repository.get_recipe_fiels(recipe_id)
+    recipe_files = file_repository.get_recipe_files(recipe_id)
 
     recipe_repository.delete(recipe_id)
 

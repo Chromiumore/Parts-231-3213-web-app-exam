@@ -8,8 +8,9 @@ class FeedbackRepository:
         query = self.db.select(Feedback).where(Feedback.id == id)
         return self.db.session.execute(query).scalar()
     
-    def get_by_recipe(self, recipe_id):
-        query = self.db.select(Feedback).join(Recipe, Recipe.id == Feedback.recipe_id).where(Recipe.id == recipe_id)
+    def get_by_recipe(self, recipe_id, user_id):
+        query = self.db.select(Feedback).join(Recipe, Recipe.id == Feedback.recipe_id).where(
+            Recipe.id == recipe_id).order_by(self.db.case((Feedback.user_id == user_id, 1), else_=2))
         return self.db.session.execute(query).scalars()
     
     def create(self, feedback):

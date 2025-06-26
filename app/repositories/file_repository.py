@@ -4,7 +4,7 @@ class FileRepository:
     def __init__(self, db):
         self.db = db
 
-    def get_recipe_fiels(self, recipe_id):
+    def get_recipe_files(self, recipe_id):
         query = self.db.select(File).where(File.recipe_id == recipe_id)
         return self.db.session.execute(query).scalars()
     
