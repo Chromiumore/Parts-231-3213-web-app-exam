@@ -1,3 +1,4 @@
+import os
 from flask import Flask
 from flask_migrate import Migrate
 from . import recipes, auth
@@ -8,6 +9,9 @@ migrate = Migrate()
 def create_app():
     app = Flask(__name__, instance_relative_config=False)
     app.config.from_pyfile('config.py', silent=False)
+
+    if not os.path.exists(app.config['UPLOAD_FOLDER']):
+        os.makedirs(app.config['UPLOAD_FOLDER'])
 
     db.init_app(app)
     migrate.init_app(app, db)

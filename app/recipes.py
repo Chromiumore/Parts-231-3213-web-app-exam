@@ -83,7 +83,7 @@ def new():
 
             for f in files:
                 f_objects.append(File(
-                    name = f"{uuid4()}-{f.name}",
+                    name = f"{uuid4()}-{f.filename}",
                     mime_type = f.mimetype,
                     recipe_id = recipe.id
                 ))
