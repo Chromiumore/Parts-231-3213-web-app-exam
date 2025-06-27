@@ -57,7 +57,7 @@ CREATE TABLE `feedbacks` (
   KEY `fk_feedbacks_recipe_id_recipes` (`recipe_id`),
   CONSTRAINT `fk_feedbacks_recipe_id_recipes` FOREIGN KEY (`recipe_id`) REFERENCES `recipes` (`id`) ON DELETE CASCADE,
   CONSTRAINT `fk_feedbacks_user_id_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -66,7 +66,7 @@ CREATE TABLE `feedbacks` (
 
 LOCK TABLES `feedbacks` WRITE;
 /*!40000 ALTER TABLE `feedbacks` DISABLE KEYS */;
-INSERT INTO `feedbacks` VALUES (9,28,1,4,'Мне ***понравилось***','2025-06-26');
+INSERT INTO `feedbacks` VALUES (9,28,1,4,'Мне ***понравилось***','2025-06-26'),(10,28,2,2,'Не очень','2025-06-26');
 /*!40000 ALTER TABLE `feedbacks` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -94,7 +94,7 @@ CREATE TABLE `files` (
 
 LOCK TABLES `files` WRITE;
 /*!40000 ALTER TABLE `files` DISABLE KEYS */;
-INSERT INTO `files` VALUES (27,'0db0d731-a3cd-4b3c-bdc3-8aac424af9a7-images','image/jpeg',27),(28,'cf8b492a-6160-4ab3-944c-adbe92d5dfcd-images','image/jpeg',27),(29,'f1c59e93-1510-41f5-bac1-476829693359-images','image/jpeg',27),(30,'097ccfd9-6caf-4bde-a7d5-d3f0ef8ddad0-images','image/jpeg',27),(31,'4a6745d8-49e1-4112-b45d-240d0890cfb4-images','image/jpeg',28);
+INSERT INTO `files` VALUES (27,'0db0d731-a3cd-4b3c-bdc3-8aac424af9a7-01ae54d47f8e6b3b18a94e79012f5887.jpg','image/jpeg',27),(28,'cf8b492a-6160-4ab3-944c-adbe92d5dfcd-carbonara-2000x1200.jpg','image/jpeg',27),(29,'f1c59e93-1510-41f5-bac1-476829693359-images.jpg','image/jpeg',27),(30,'097ccfd9-6caf-4bde-a7d5-d3f0ef8ddad0-Без названия.jpg','image/jpeg',27),(31,'4a6745d8-49e1-4112-b45d-240d0890cfb4-big_608187.jpg','image/jpeg',28);
 /*!40000 ALTER TABLE `files` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -195,4 +195,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-06-26  5:23:45
+-- Dump completed on 2025-06-27 12:09:47
